@@ -7,8 +7,8 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	// freopen("input.txt", "r", stdin);
-	// freopen("output.txt", "w",stdout);
+	// freopen("../input.txt", "r", stdin);
+	// freopen("../output.txt", "w",stdout);
 
 	ull n, tot; cin >> n, tot = (n*(n+1))>>1;
 

@@ -28,8 +28,8 @@ void testCase()
 
 int main(int argc, char *argv[])
 {
-	// freopen("input.txt", "r", stdin);
-	// freopen("output.txt", "w", stdout);
+	// freopen("../input.txt", "r", stdin);
+	// freopen("../output.txt", "w", stdout);
 
 	int t; cin >> t;
 	while(t--) testCase();
