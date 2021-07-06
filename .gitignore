@@ -1,3 +1,4 @@
 # Ignore all files but unignore all files with cpp extension
 *
-!**.cpp
+!*.cpp
+!*/

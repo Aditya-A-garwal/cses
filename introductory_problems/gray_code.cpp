@@ -15,20 +15,15 @@ int main(int argc, char *argv[])
 	// reverse the above set and append it to the original
 	// postfix the first half with a "0" and the second with a "1"
 
-	vector<string> ans{"0", "1"};
-	int n, i; cin >> n;
+	int n, x, a; cin >> n, x = 1 << n;
 
-	while(--n)
+	for(int i = 0; i < x; i++)
 	{
-		i = ans.size() - 1;
-		for(int x = i; x >= 0; x--)
-		{
-			ans.emplace_back(ans[x]);
-			ans[x] += '0', ans.back() += '1';
-		}
+		a = i ^ (i >> 1);
+		for(int j = 0; j < n; j++)
+			cout << ('0' + (a>>j)&1);
+		cout << '\n';
 	}
-
-	for(auto &s : ans) cout << s << '\n';
 
 	return 0;
 }

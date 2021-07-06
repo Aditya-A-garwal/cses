@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
 
 	if(!(tot & 1))
 	{
+
 		tot >>= 1;
 		vector<ull> ar1, ar2;
 

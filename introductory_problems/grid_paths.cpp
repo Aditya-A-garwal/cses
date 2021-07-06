@@ -7,26 +7,26 @@ using namespace std;
 string p; 
 bool vis[9][9];
 int ans;
-
+ 
 inline bool splitVerCheck(const int &i, const int &j)
 {
 	// if the top and bottom have been visited, but the two sides have not,
 	// there will always be one of them which remains unvisited
-
+ 
 	return !(vis[i-1][j] and vis[i+1][j] and !vis[i][j+1] and !vis[i][j-1]);
 }
-
+ 
 inline bool splitHorCheck(const int &i, const int &j)
 {
 	// if the right and left have been visited, but the top and bottom have not,
 	// there will always be one of them which remains unvisited	
-
+ 
 	return !(vis[i][j-1] and vis[i][j+1] and !vis[i-1][j] and !vis[i+1][j]);
 }
-
+ 
 void DFS(int steps, int i, int j)
 {
-
+ 
 	if(vis[i][j]) return;
  
 	if(i == 7 and j == 1)
@@ -34,9 +34,9 @@ void DFS(int steps, int i, int j)
 		ans += (int)(steps >= 47);
 		return;
 	}
-
+ 
 	if(steps > 47) return;
-
+ 
 	vis[i][j] = 1;
 	if(p[steps] == '?')
 	{
@@ -54,20 +54,20 @@ void DFS(int steps, int i, int j)
  
 int main(int argc, char *argv[])
 {
-	// freopen("../input.txt", "r", stdin);
-	// freopen("../output.txt", "w", stdout);
+	// freopen("input.txt", "r", stdin);
+	// freopen("output.txt", "w", stdout);
  
 	ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
  
 	memset(vis, 0, sizeof(vis));
-
+ 
 	for(int i = 0; i < 9; i++)
 		vis[0][i] = vis[i][0] = vis[8][i] = vis[i][8] = 1;
-
+ 
 	cin >> p, ans = 0;
  
 	DFS(0, 1, 1);
-
+ 
 	cout << ans << '\n';
  
 	return 0;
