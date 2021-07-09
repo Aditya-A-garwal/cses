@@ -16,13 +16,10 @@ int main(int argc, char *argv[])
 	for(int i = 0; i < n; i++)
 	{
 		cin >> x, it = towertops.upper_bound(x);
-		if(it == towertops.end())
-			towertops.insert(x);
-		else
-		{
+		if(it != towertops.end())
 			towertops.erase(it);
-			towertops.insert(x);
-		}
+
+		towertops.insert(x);
 	}
 
 	cout << towertops.size() << '\n';
