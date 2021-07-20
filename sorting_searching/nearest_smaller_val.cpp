@@ -4,6 +4,9 @@
 #include<ext/pb_ds/assoc_container.hpp>
 #include<ext/pb_ds/tree_policy.hpp>
 
+#define ff first
+#define ss second
+
 using namespace std;
 using namespace __gnu_pbds;
 
@@ -24,6 +27,24 @@ int main(int argc, char *argv[])
 #endif
 
 	ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+
+	// All the elements we pop from the stack will be suboptimal choices anyways
+	// since they are greater than the current element and are more to the left in the array
+
+	int n, x; cin >> n;
+	stack<pii> minS;
+	minS.emplace(-1, 0);
+
+	for(int i = 1; i <= n; i++)
+	{
+		cin >> x;
+		while(minS.top().ff >= x)
+			minS.pop();
+
+		cout << minS.top().ss << ' ', minS.emplace(x, i);
+	}
+
+	cout << '\n';
 
 	return 0;
 }
