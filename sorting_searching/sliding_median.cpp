@@ -13,8 +13,8 @@ using pll = pair<ll, ll>;
 template<typename T>
 using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
-const int inf = 1e9 + 1;
-const ll llinf = 200000000000002;
+const int inf = 1e9 + 10;
+const ll llinf = 1e18 + 10;
 
 int main(int argc, char *argv[])
 {
@@ -25,40 +25,23 @@ int main(int argc, char *argv[])
 
 	ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-	int n, k; cin >> n >> k;
-	vector<ll> ar(n);
+	int n, k, mid; cin >> n >> k, mid = (k - 1)/2;
+	vector<int> ar(n + 1); ar[0] = 0;
+	ordered_set<pair<int, int>> chk;
 
-	for(auto &e : ar)
-		cin >> e;
+	for(int i = 1; i <= n; i++)
+		cin >> ar[i];
 
-	auto check = [&](ll s) -> bool
+	for(int i = 1; i < k; i++)
+		chk.insert({ar[i], i});
+
+	for(int i = k; i <= n; i++)
 	{
-		ll cursum = 0, subs = 1;
-		for(auto &e : ar)
-		{
-			if(e > s)
-				return 0;
-			if(cursum + e > s)
-				cursum = 0, subs++;
-
-			cursum += e;
-		}
-
-		return subs <= k;
-	};
-
-	ll lo = n, hi = (ll)n * inf, mid, ans;
-
-	while(lo <= hi)
-	{
-		mid = lo + (hi - lo + 1)/2;
-		if(check(mid))
-			hi = mid - 1, ans = mid;
-		else
-			lo = mid + 1;
+		chk.erase({ar[i - k], i-k}), chk.insert({ar[i], i});
+		cout << (*chk.find_by_order(mid)).first << ' ';
 	}
 
-	cout << ans << '\n';
+	cout << '\n';
 
 	return 0;
 }
