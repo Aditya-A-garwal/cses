@@ -4,6 +4,9 @@
 #include<ext/pb_ds/assoc_container.hpp>
 #include<ext/pb_ds/tree_policy.hpp>
 
+#define ff first
+#define ss second
+
 using namespace std;
 using namespace __gnu_pbds;
 
@@ -27,40 +30,41 @@ int main(int argc, char *argv[])
 
 	int n, m, x, y; cin >> n >> m;
 	vector<vector<int>> adjlst(n);
-	vector<int> in(n, 0), vis(n, 0), ans; ans.reserve(n);
+	vector<pii> vis(n, {-1, -1});
 
-	function<void(int)> DFS = [&](int cur)
-	{
-		vis[cur] = 1;
-
-		for(auto &nxt : adjlst[cur])
-		{
-			if(!vis[nxt])
-				DFS(nxt);
-			else if(vis[nxt] == 1) // there is an isolated cycle in this component
-			{
-				cout << "IMPOSSIBLE\n";
-				exit(0);
-			}
-		}
-
-		ans.emplace_back(cur);
-		vis[cur] = 2;
-	};
+	stack<int> st;
 
 	while(m--)
-		cin >> x >> y, adjlst[--x].emplace_back(--y), in[y]++;
+	{
+		int x, y; cin >> x >> y;
+		adjlst[--x].emplace_back(--y);
+	}
 
-	for(int i = 0; i < n; i++)
-		if(!in[i])
-			DFS(i);
+	vis[0] = {-1, 0}, st.emplace(0);
+	int h;
 
-	if(ans.size() != n) // there is a strongly connected component
+	while(!st.empty())
+	{
+		h = st.top(), st.pop();
+
+		for(auto &nxt : adjlst[h])
+			if(vis[nxt].ss < 1 + vis[h].ss)
+				vis[nxt] = {h, 1 + vis[h].ss}, st.emplace(nxt);
+	}
+
+	if(vis[n-1].ff == -1)
 	{
 		cout << "IMPOSSIBLE\n";
 		return 0;
 	}
 
+	vector<int> ans; ans.reserve(vis[n-1].ss + 1);
+
+	int i = n-1;
+	while(i != -1)
+		ans.emplace_back(i), i = vis[i].ff;
+
+	cout << ans.size() << '\n';
 	for(auto it = ans.rbegin(); it != ans.rend(); it++)
 		cout << 1 + *it << ' ';
 	cout << '\n';
