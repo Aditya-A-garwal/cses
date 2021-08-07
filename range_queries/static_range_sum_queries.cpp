@@ -16,11 +16,6 @@ using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statisti
 const int inf = 1e9 + 10;
 const ll llinf = 1e18 + 10;
 
-void solve()
-{
-	ll n; cin >> n;
-}
-
 int main(int argc, char *argv[])
 {
 #ifndef ONLINE_JUDGE
@@ -30,9 +25,20 @@ int main(int argc, char *argv[])
 
 	ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-	int t; cin >> t;
-	while(t--)
-		solve();
+	int n, q, a, b;
+	ll x;
+	cin >> n >> q;
+
+	vector<ll> pre(n + 1); pre[0] = 0;
+
+	for(int i = 1; i <= n; i++)
+		cin >> x, pre[i] = x + pre[i-1];
+
+	while(q--)
+	{
+		cin >> a >> b;
+		cout << pre[b] - pre[a-1] << '\n';
+	}
 
 	return 0;
 }
