@@ -37,25 +37,23 @@ int main(int argc, char *argv[])
 	const int mxLog = 19;
 	int n, q, a, b; cin >> n >> q;
 
-	vector<vector<int>> pre(n, vector<int>(mxLog, inf));
-	// pre[i][j] is the min element in the range a[i , i + 2^j)
-
-	function<int(int, int)> rangeMin = [&](int i, int j) -> int
-	{
-		int log = log2(j - i + 1);
-
-		if(__builtin_popcount(j - i + 1) == 1) // a perfect power of 2
-			return pre[i][log];
-
-		return min(pre[i][log], rangeMin(i + (1 << log), j));
-	};
+	vector<vector<int>> pre(n, vector<int>(mxLog));
 
 	for(int i = 0; i < n; i++)
 		cin >> pre[i][0];
 
 	for(int j = 1; j < mxLog; j++)
-		for(int i = 0; i+(1 << (j-1)) < n; i++)
-			pre[i][j] = min(pre[i][j-1], pre[i+(1 << (j-1))][j-1]);
+		for(int i = 0; i+(1<<(j-1)) < n; i++)
+			pre[i][j] = pre[i][j-1] ^ pre[i+(1<<(j-1))][j-1];
+
+	function<int(int, int)> rangeMin = [&](int i, int j)
+	{
+		int log = log2(j - i + 1);
+		if(__builtin_popcount(j - i + 1) == 1) // perfect power of 2
+			return pre[i][log];
+
+		return pre[i][log] ^ rangeMin(i+(1<<log), j);
+	};
 
 	while(q--)
 	{
