@@ -29,5 +29,41 @@ int main(int argc, char *argv[])
 
 	ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
+	int n, m, a, b, mx = 1, nx; cin >> n >> m, nx = n;
+
+	vector<int> dsu(n), sz(n, 1);
+	for(int i = 0; i < n; i++)
+		dsu[i] = i;
+
+	function<int(int)> getSet = [&](int node)
+	{
+		while(node != dsu[node])
+			node = dsu[node];
+
+		return node;
+	};
+
+	function<int(int, int)> makeSame = [&](int node1, int node2) -> int
+	{
+		node1 = getSet(node1), node2 = getSet(node2);
+
+		if(node1 > node2)
+			swap(node1, node2);
+
+		dsu[node2] = node1;
+		return sz[node1] += sz[node2];
+	};
+
+	while(m--)
+	{
+		cin >> a >> b, --a, --b;
+		if(getSet(a) != getSet(b))
+		{
+			nx -= 1;
+			mx = max(mx, makeSame(a, b));
+		}
+		cout << nx << ' ' << mx << '\n';
+	}
+
 	return 0;
 }
