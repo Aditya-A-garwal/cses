@@ -30,17 +30,15 @@ vector<vector<pii>> qry;
 
 void update(int i, int diff)
 {
-	do
-		bit[i] += diff, i += i&(-i);
-	while(i <= n);
+	for(;i > 0; i -= i&(-i))
+		bit[i] += diff;
 }
 
 int query(int i)
 {
 	int res = 0;
-	do
-		res += bit[i], i -= i&(-i);
-	while(i);
+	for(;i > 0; i -= i&(-i))
+		res += bit[i];
 
 	return res;
 }
@@ -55,8 +53,7 @@ int main(int argc, char *argv[])
 	ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
 	cin >> n >> q;
-	ar.resize(n), qry.resize(n + 1), ans.resize(q);
-	bit.resize(n + 1);
+	ar.resize(n), qry.resize(n + 1), bit.resize(n + 1), ans.resize(q);
 	fill(bit.begin(), bit.end(), 0);
 
 	for(auto &e : ar)
@@ -71,12 +68,16 @@ int main(int argc, char *argv[])
 	map<int, int> chk;
 	for(int i = n; i > 0; i--)
 	{
+		// Exists somewhere to the right, so decrement value there
 		if(chk.count(ar[i-1]))
 			update(chk[ar[i-1]], -1);
 
+		// set new leftmost to the current value and set to 1 to indicate uniqueness
 		chk[ar[i-1]] = i;
 		update(i, 1);
 
+		// get the prefix sum upto right
+		// all positions will be set if unique
 		for(auto &[r, i] : qry[i])
 			ans[i] = query(r);
 	}
