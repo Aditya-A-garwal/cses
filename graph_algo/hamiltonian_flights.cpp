@@ -47,11 +47,8 @@ int getNext(int mask, int cur)
 		toggleVis(cur, mask);
 
 		for(auto &e : adj[cur])
-		{
-			if(getVis(e, mask))
-				continue;
-			(res += getNext(mask, e)) %= mod;
-		}
+			if(!getVis(e, mask))
+				(res += getNext(mask, e)) %= mod;
 
 		toggleVis(cur, mask);
 		dp[mask][cur] = res;
