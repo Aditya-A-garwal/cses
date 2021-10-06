@@ -25,8 +25,6 @@ using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statisti
 const int inf = 1e9 + 10;
 const ll llinf = 1e18 + 10;
 
-int n, q;
-
 vll bit;
 
 void updateBit(int i, ll diff)
@@ -49,7 +47,6 @@ ll preSum(int i)
 	ll res = 0;
 	for(int j = i+1; j > 0; j -= j&(-j))
 		res += bit[j];
-
 	return res;
 }
 
@@ -67,23 +64,20 @@ int main(int argc, char *argv[])
 
 	ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-	cin >> n >> q;
+	int n, q; cin >> n >> q;
 	vector<vi> adj(n);
 	vi st(n), en(n);
-	vll ar(n), flatar; flatar.reserve(1 + (n << 1));
+	vll ar(n), flat(n << 1);
 
 	int timer = 0;
 	function<void(int, int)> flatten = [&](int cur, int prv)
 	{
-		flatar.pb(ar[cur]);
 		st[cur] = timer++;
-
 		for(auto &nxt : adj[cur])
 			if(nxt != prv)
 				flatten(nxt, cur);
-
-		flatar.pb(ar[cur]);
 		en[cur] = timer++;
+		flat[st[cur]] = flat[en[cur]] = ar[cur];
 	};
 
 	for(auto &e : ar)
@@ -95,10 +89,10 @@ int main(int argc, char *argv[])
 		adj[x].pb(y), adj[y].pb(x);
 	}
 
-	flatten(0, 0);
-	createBit(flatar);
+	flatten(0, -1);
+	createBit(flat);
 
-	char c; ll a, b, i, diff;
+	char c; ll a, b, diff;
 	while(q--)
 	{
 		cin >> c >> a, --a;
@@ -106,17 +100,18 @@ int main(int argc, char *argv[])
 		{
 			cin >> b;
 
-			// update for start and end positions
-			for(auto &arr : {st, en})
-			{
-				i = arr[a];
-				diff = b - flatar[i];
-				updateBit(i, diff);
-				flatar[i] += diff;
-			}
+			// update the first position
+			diff = b - flat[st[a]];
+			updateBit(st[a], diff);
+			flat[st[a]] += diff;
+
+			// update the second position
+			diff = b - flat[en[a]];
+			updateBit(en[a], diff);
+			flat[en[a]] += diff;
 		}
 		else
-			cout << (rangeSum(st[a], en[a])/2) << '\n';
+			cout << rangeSum(st[a], en[a])/2 << '\n';
 	}
 
 	return 0;
