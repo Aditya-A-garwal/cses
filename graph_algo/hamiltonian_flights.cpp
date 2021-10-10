@@ -22,44 +22,37 @@ const ll llinf = 1e18 + 10;
 
 const int mod = 1e9 + 7;
 
-ll n, m, full;
+int n, m;
+int full;
 
 vi adj[21];
+int dp[2100000][21];
 
-int dp[2097152][21];
-
-inline void toggleVis(int node, int &mask)
-{
-	mask ^= (1 << node);
+void toggleBit(int &mask, int i) {
+	mask ^= (1 << i);
 }
 
-inline int getVis(int node, int &mask)
-{
-	return (mask >> node) & 1;
+int getBit(int &mask, int i) {
+	return (mask >> i) & 1;
 }
 
-int getNext(int mask, int cur)
-{
-	if(dp[mask][cur] == -1)
-	{
+int getNext(int i, int mask) {
+
+	if(dp[mask][i] == -1) {
+
 		ll res = 0;
+		toggleBit(mask, i);
 
-		toggleVis(cur, mask);
+		for(auto &e : adj[i])
+			if(!getBit(mask, e))
+				(res += getNext(e, mask)) %= mod;
 
-		for(auto &e : adj[cur])
-			if(!getVis(e, mask))
-				(res += getNext(mask, e)) %= mod;
-
-		toggleVis(cur, mask);
-		dp[mask][cur] = res;
+		toggleBit(mask, i);
+		dp[mask][i] = res;
 	}
 
-	return dp[mask][cur];
+	return dp[mask][i];
 }
-
-// dp[i][j] is the ans for the sub problem-
-// the nodes in the bit representation of "i" have been used up
-// j is the current node
 
 int main(int argc, char *argv[])
 {
@@ -71,15 +64,15 @@ int main(int argc, char *argv[])
 	ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
 	cin >> n >> m, full = (1 << (n - 1)) - 1;
+
 	memset(dp, -1, sizeof(dp));
 
 	dp[full][n-1] = 1;
 
-	int a, b;
-	while(m--)
-	{
-		cin >> a >> b, --a, --b;
-		adj[a].emplace_back(b);
+	int u, v;
+	while(m--) {
+		cin >> u >> v, --u, --v;
+		adj[u].emplace_back(v);
 	}
 
 	cout << getNext(0, 0) << '\n';
